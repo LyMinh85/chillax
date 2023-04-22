@@ -1,3 +1,4 @@
+import math
 from tkinter import filedialog
 
 import customtkinter as ctk
@@ -81,7 +82,15 @@ class App(ctk.CTk):
         self.music_player_frame.song_name_label.configure(text=music_player.song.title)
         self.music_player_frame.artwork_image.configure(dark_image=Image.open(BytesIO(music_player.song.artwork)))
         self.music_player_frame.artwork_label.configure(image=self.music_player_frame.artwork_image)
+        self.music_player_frame.current_playing_time.configure(text="00:00:00")
         self.music_player_frame.song_duration_time.configure(text=music_player.song.getTime())
         self.music_player_frame.play_button.configure(image=self.music_player_frame.play_image)
+
+        self.music_player_frame.duration_slider.configure(from_=0, to=math.ceil(music_player.song.length))
         self.music_player_frame.duration_slider.set(0)
 
+        # Refresh if music player is playing
+        if music_player.is_playing:
+            music_player.is_playing = False
+            music_player.current_time = 0
+            music_player.is_pause = False

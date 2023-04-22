@@ -15,6 +15,7 @@ class MusicPlayerFrame(ctk.CTkFrame):
         super().__init__(master, **kwargs)
 
         # After ids
+        self.check_music_ended_after_id = None
         self.current_playing_time_after_id = None
 
         # -----------------------------------
@@ -192,8 +193,6 @@ class MusicPlayerFrame(ctk.CTkFrame):
         # finished song
         else:
             self.current_playing_time.after_cancel(self.current_playing_time_after_id)
-            self.current_playing_time.configure(text=music_player.song.getTime())
-            self.duration_slider.set(math.ceil(music_player.song.length))
             self.play_button.configure(image=self.play_image)
 
     # Function to check is music end for every 0.1 second
@@ -203,8 +202,12 @@ class MusicPlayerFrame(ctk.CTkFrame):
             if event.type == MUSIC_END:
                 music_player.is_playing = False
                 music_player.current_time = 0
+                self.current_playing_time.configure(text=music_player.song.getTime())
+                self.duration_slider.set(math.ceil(music_player.song.length))
+                self.after_cancel(self.check_music_ended_after_id)
 
-        self.after(100, self.check_music_ended)  # Repeat this function every 0.1 second
+        # Repeat this function every 0.1 second
+        self.check_music_ended_after_id = self.after(100, self.check_music_ended)
 
     # Function toggle mute or unmute volume
     def volume_button_on_click(self):
