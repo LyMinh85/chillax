@@ -2,6 +2,12 @@ import pygame
 from PIL import Image, ImageTk
 from views.App import App
 
+
+def is_macos():
+    import platform
+    return platform.system() == "Darwin"
+
+
 if __name__ == "__main__":
     app = App()
 
@@ -10,7 +16,8 @@ if __name__ == "__main__":
 
     # Create the Tkinter app window
     # app.geometry("1000x700")
-    app.resizable(False, False)
+    if not is_macos():
+        app.resizable(False, False)
     app.title("Music Player")
     ico = Image.open("assets/images/logo.png")
     photo = ImageTk.PhotoImage(ico)

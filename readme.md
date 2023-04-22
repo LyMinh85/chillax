@@ -28,12 +28,65 @@
 </p>
 
 ## Quick start
-1. Install all requirements:
-    ```shell
+### Windows OS
+1. If python is not in your system
+   - [Install python3.10 or higher version](https://www.python.org/downloads/)
+
+2. Create a venv and install all requirements:
+   ```shell
+    git clone https://github.com/LyMinh85/chillax.git
+    cd chillax
+    python -m venv env
+    source env/bin/activate
     pip install -r requirements.txt
     ```
-2. Run Chillax
+3. Run Chillax App
     ```shell
     python Chillax.py
     ```
+### Linux OS
+1. If python is not in your system
+   ```shell
+   sudo apt install software-properties-common -y
+   sudo add-apt-repository ppa:deadsnakes/ppa
+   sudo apt install python3.10
+   ```
+2. If pip is not in your system
+   ```shell
+   sudo apt-get install python-pip
+   ```
+3. If Tkinter and venv are not in your system
+   ```shell
+   sudo apt install python3.10-venv
+   sudo apt-get install python3.10-tk
+   ```
+4. Create a venv and install all requirements:
+    ```shell
+    git clone https://github.com/LyMinh85/chillax.git
+    cd chillax
+    python3 -m venv env
+    source env/bin/activate
+    pip install -r requirements.txt
+    ```
+5. Run Chillax App
+    ```shell
+    python3 Chillax.py
+    ```
+   
+### MacOS
+1. If python is not in your system
+   - [Install python3.10 or higher version](https://www.python.org/downloads/macos/)
 
+2. Create a venv and install all requirements:
+   ```shell
+    git clone https://github.com/LyMinh85/chillax.git
+    cd chillax
+    python3 -m venv env
+    source env/bin/activate
+    pip install -r requirements.txt
+    ```
+
+3. Run Chillax App
+    ```shell
+    python Chillax.py
+    ```

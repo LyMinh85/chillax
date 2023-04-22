@@ -1,10 +1,8 @@
 import math
-from tkinter import filedialog
-
 import customtkinter as ctk
 import pygame
-
 import config
+from tkinter import filedialog
 from views.LeftFrame import LeftFrame
 from views.MusicPlayerFrame import MusicPlayerFrame
 from views.RightFrame import RightFrame
@@ -37,6 +35,7 @@ class App(ctk.CTk):
             self, width=250, fg_color=config.left_frame_background_color, corner_radius=0
         )
         self.left_frame.grid(row=0, column=0, sticky="nsew")
+        self.left_frame.grid_rowconfigure(6, weight=1)
 
         self.add_folder_image = ctk.CTkImage(dark_image=Image.open("assets/images/folder-add.png"), size=(30, 30))
         self.add_folder_button = ctk.CTkButton(
@@ -47,7 +46,7 @@ class App(ctk.CTk):
             anchor="w",
             command=self.btn_load_on_click,
         )
-        self.add_folder_button.grid(row=6, column=0, columnspan=3, padx=20, pady=360, sticky="swe")
+        self.add_folder_button.grid(row=6, column=0, columnspan=3, padx=20, pady=10, sticky="swe")
 
         # right frame
         self.right_frame = RightFrame(
