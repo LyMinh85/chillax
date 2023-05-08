@@ -16,13 +16,19 @@ class MusicPlayer:
 
     def get_song_from(self, file_path):
         file: FileType = File(file_path, easy=True)
-        tags = ID3(file_path)
-        if file['title'] is not None:
-            song_title = file['title'][0]
-        else:
+        try:
+            tags = ID3(file_path)
+            if file['title'] is not None:
+                song_title = file['title'][0]
+            else:
+                import os
+                song_title = os.path.basename(file_path)
+            artwork = tags.getall('APIC')[0].data  # access APIC frame and grab the image
+        except Exception:
             import os
             song_title = os.path.basename(file_path)
-        artwork = tags.getall('APIC')[0].data  # access APIC frame and grab the image
+            artwork = ""
+
         self.song = Song(song_title, file_path, file.info.length)
         self.song.artwork = artwork
 

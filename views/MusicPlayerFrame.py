@@ -52,7 +52,9 @@ class MusicPlayerFrame(ctk.CTkFrame):
         self.music_control_frame.grid_columnconfigure(0, weight=1)
 
         # music control buttons frame
-        self.music_control_buttons_frame = ctk.CTkFrame(self.music_control_frame, height=40, fg_color="transparent")
+        self.music_control_buttons_frame = ctk.CTkFrame(
+            self.music_control_frame, height=40, fg_color="transparent"
+        )
         self.music_control_buttons_frame.grid(row=0, column=0, pady=10)
 
         # Previous button
@@ -105,7 +107,7 @@ class MusicPlayerFrame(ctk.CTkFrame):
 
         # volume frame
         self.volume_frame = ctk.CTkFrame(self, height=60, fg_color="transparent", corner_radius=0)
-        self.volume_frame.grid(row=0, column=2, sticky="wens")
+        self.volume_frame.grid(row=0, column=2, sticky="ens")
         self.volume_frame.grid_rowconfigure(0, weight=1)
         self.volume_frame.grid_columnconfigure(0, weight=1)
 
