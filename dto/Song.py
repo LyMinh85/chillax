@@ -1,4 +1,5 @@
 import time
+from io import BytesIO
 
 
 class Song:
@@ -6,7 +7,16 @@ class Song:
         self.title = title
         self.file_path = file_path
         self.length = length
-        self.artwork = ""
+        self.artwork = None
+
+    def get_art_work(self):
+        if isinstance(self.artwork, str):
+            if self.artwork == "":
+                return "assets/images/empty-artwork.png"
+            else:
+                return self.artwork
+        else:
+            return BytesIO(self.artwork)
 
     # Method return a duration of song
     # with format hh:mm:ss

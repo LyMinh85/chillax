@@ -1,9 +1,12 @@
 from PIL import Image
 import customtkinter as ctk
 
+from views.HomeFrame import HomeFrame
+from views.MusicLibraryFrame import MusicLibraryFrame
+
 
 class LeftFrame(ctk.CTkFrame):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, navigation_command, **kwargs):
         super().__init__(master, **kwargs)
 
         # -----------------------------------
@@ -39,7 +42,7 @@ class LeftFrame(ctk.CTkFrame):
             image=self.home_image,
             anchor="w",
             corner_radius=0,
-            command=self.home_button_event
+            command=lambda: navigation_command("HomeFrame")
         )
         self.home_button.grid(row=1, column=0, columnspan=3, sticky="ew")
 
@@ -53,7 +56,7 @@ class LeftFrame(ctk.CTkFrame):
             image=self.library_image,
             anchor="w",
             corner_radius=0,
-            command=self.library_button_event
+            command=lambda: navigation_command("MusicLibraryFrame")
         )
         self.library_button.grid(row=2, column=0, columnspan=3, sticky="ew")
 
@@ -66,7 +69,7 @@ class LeftFrame(ctk.CTkFrame):
             image=self.playlist_image,
             anchor="w",
             corner_radius=0,
-            command=self.library_button_event
+            command=lambda: navigation_command("PlaylistFrame")
         )
         self.playlist_button.grid(row=4, column=0, columnspan=3, sticky="ew")
 
@@ -79,22 +82,12 @@ class LeftFrame(ctk.CTkFrame):
             image=self.setting_image,
             anchor="w",
             corner_radius=0,
-            command=self.library_button_event
+            command=lambda: navigation_command("SettingFrame")
         )
         self.setting_button.grid(row=5, column=0, columnspan=3, sticky="ew")
         # -----------------------------------
         # End init components
         # -----------------------------------
-
-
-    def menu_button_event(self):
-        self.select_button("menu")
-
-    def home_button_event(self):
-        self.select_button("home")
-
-    def library_button_event(self):
-        self.select_button("library")
 
     def select_button(self, name):
         if name == "home":

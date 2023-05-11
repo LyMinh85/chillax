@@ -1,6 +1,17 @@
 import pygame
 from PIL import Image, ImageTk
 from views.App import App
+import pyglet
+
+
+def import_font():
+    import pyglet
+    import os
+    import glob
+    font_path = "assets/font"
+    for filename in glob.glob("*.ttf"):
+        file_path = font_path + "/" + filename
+        pyglet.font.add_file(file_path)  # Your TTF file name here
 
 
 def is_macos():
@@ -9,6 +20,7 @@ def is_macos():
 
 
 if __name__ == "__main__":
+    import_font()
     app = App()
 
     width = 1000  # Width
