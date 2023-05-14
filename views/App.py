@@ -2,7 +2,6 @@ import math
 from io import BytesIO
 from tkinter import filedialog
 
-
 import customtkinter as ctk
 import pygame
 from PIL import Image
@@ -49,17 +48,6 @@ class App(ctk.CTk):
         )
         self.right_frame.grid(row=0, column=1, sticky="nsew")
 
-        self.add_folder_image = ctk.CTkImage(dark_image=Image.open("assets/images/folder-add.png"), size=(30, 30))
-        self.add_folder_button = ctk.CTkButton(
-            self.right_frame.frames[MusicLibraryFrame.__name__],
-            text="Add a folder",
-            text_color="white", fg_color="#a61313", hover_color="#d51818",
-            image=self.add_folder_image,
-            anchor="w",
-            command=self.btn_load_on_click,
-        )
-        self.add_folder_button.grid(row=0, column=0, columnspan=3, padx=20, pady=10, sticky="se")
-
         # Music player bar frame
         self.music_player_frame = MusicPlayerFrame(
             self, height=100, fg_color=config.music_player_bar_background_color, corner_radius=0
@@ -73,14 +61,21 @@ class App(ctk.CTk):
         # Bind the window closing event to the quit_program function
         self.protocol("WM_DELETE_WINDOW", self.quit_program)
 
+        # Set Home is default frame
+        self.btn_navigation_on_click("HomeFrame", self.left_frame.home_button)
+
     # Function to quit the program and stop the loop
     def quit_program(self):
         self.destroy()
 
+    def btn_navigation_on_click(self, page_name, button):
+        # Change button color
+        if self.left_frame.current_selected_button is not None:
+            self.left_frame.current_selected_button.configure(fg_color="transparent")
 
+        self.left_frame.current_selected_button = button
+        self.left_frame.current_selected_button.configure(fg_color="gray30")
 
-
-    def btn_navigation_on_click(self, page_name):
         self.right_frame.show_frame(page_name)
 
     def btn_load_on_click(self):
@@ -95,18 +90,20 @@ class App(ctk.CTk):
             song = music_library.get_song_from(file_path)
             music_library.add_song(song)
 
-        self.right_frame.frames[MusicLibraryFrame.__name__].add_song_list(
-            music_library.songs,
+        self.right_frame.frames[MusicLibraryFrame.__name__].render_list_song(
+            music_library.list_song,
             command=self.on_select_song
         )
+        music_player.set_list_song(music_library.list_song)
 
     def on_select_song(self, index, song):
         music_library_frame = self.right_frame.frames[MusicLibraryFrame.__name__]
         if music_library_frame.current_choosing_frame is not None:
-            music_library_frame.current_choosing_frame.song_button.configure(fg_color="transparent")
+            music_library_frame.current_choosing_frame.set_selected(False)
         music_library_frame.current_choosing_frame = music_library_frame.list_song_frame[index]
-        music_library_frame.current_choosing_frame.song_button.configure(fg_color="gray30")
+        music_library_frame.current_choosing_frame.set_selected(True)
 
+        music_player.current_song_index = index
         music_player.load_song(song.file_path)
 
         # Update song information in music player frame
@@ -125,3 +122,5 @@ class App(ctk.CTk):
             music_player.is_playing = False
             music_player.current_time = 0
             music_player.is_pause = False
+
+        self.music_player_frame.play_song()

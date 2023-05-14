@@ -3,7 +3,10 @@ import time
 import customtkinter as ctk
 import pygame
 from PIL import Image
+
+import views.App
 from controllers.MusicPlayer import music_player
+from views.MusicLibraryFrame import MusicLibraryFrame
 
 # Set MUSIC_END event for pygame
 MUSIC_END = pygame.USEREVENT+1
@@ -13,6 +16,8 @@ pygame.mixer.music.set_endevent(MUSIC_END)
 class MusicPlayerFrame(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
+
+        self.parent = master
 
         # After ids
         self.check_music_ended_after_id = None
@@ -62,7 +67,8 @@ class MusicPlayerFrame(ctk.CTkFrame):
         self.previous_button = ctk.CTkButton(
             self.music_control_buttons_frame, text="", image=self.previous_image,
             width=15, height=15, fg_color="transparent",
-            hover_color="gray30"
+            hover_color="gray30",
+            command=self.btn_previous_song_on_click
         )
         self.previous_button.grid(row=0, column=0)
 
@@ -81,7 +87,8 @@ class MusicPlayerFrame(ctk.CTkFrame):
         self.next_button = ctk.CTkButton(
             self.music_control_buttons_frame, text="", image=self.next_image,
             width=15, height=15, fg_color="transparent",
-            hover_color="gray30"
+            hover_color="gray30",
+            command=self.btn_next_song_on_click
         )
         self.next_button.grid(row=0, column=2)
 
@@ -208,8 +215,38 @@ class MusicPlayerFrame(ctk.CTkFrame):
                 self.duration_slider.set(math.ceil(music_player.song.length))
                 self.after_cancel(self.check_music_ended_after_id)
 
+                if music_player.has_next_song():
+                    print("Next song")
+                    music_player.load_next_song()
+                    self.update_song_information(music_player.song)
+                    self.play_song()
+
         # Repeat this function every 0.1 second
         self.check_music_ended_after_id = self.after(100, self.check_music_ended)
+
+    def update_song_information(self, song):
+        music_library_frame = self.parent.right_frame.frames[MusicLibraryFrame.__name__]
+        if music_library_frame.current_choosing_frame is not None:
+            music_library_frame.current_choosing_frame.set_selected(False)
+        music_library_frame.current_choosing_frame = music_library_frame.list_song_frame[music_player.current_song_index]
+        music_library_frame.current_choosing_frame.set_selected(True)
+
+        # Update song information in music player frame
+        self.song_name_label.configure(text=music_player.song.title)
+        self.artwork_image.configure(dark_image=Image.open(music_player.song.get_art_work()))
+        self.artwork_label.configure(image=self.artwork_image)
+        self.current_playing_time.configure(text="00:00:00")
+        self.song_duration_time.configure(text=music_player.song.getTime())
+        self.play_button.configure(image=self.play_image)
+
+        self.duration_slider.configure(from_=0, to=math.ceil(music_player.song.length))
+        self.duration_slider.set(0)
+
+        # Refresh if music player is playing
+        if music_player.is_playing:
+            music_player.is_playing = False
+            music_player.current_time = 0
+            music_player.is_pause = False
 
     # Function toggle mute or unmute volume
     def volume_button_on_click(self):
@@ -223,4 +260,26 @@ class MusicPlayerFrame(ctk.CTkFrame):
             self.volume_button.configure(image=self.volume_mute_image)
             self.volume_slider_on_drag(0)
             self.volume_slider.set(0)
+
+    def btn_next_song_on_click(self):
+        music_player.is_playing = False
+        music_player.current_time = 0
+        self.current_playing_time.configure(text=music_player.song.getTime())
+        self.duration_slider.set(math.ceil(music_player.song.length))
+        self.after_cancel(self.check_music_ended_after_id)
+
+        music_player.load_next_song()
+        self.update_song_information(music_player.song)
+        self.play_song()
+
+    def btn_previous_song_on_click(self):
+        music_player.is_playing = False
+        music_player.current_time = 0
+        self.current_playing_time.configure(text=music_player.song.getTime())
+        self.duration_slider.set(math.ceil(music_player.song.length))
+        self.after_cancel(self.check_music_ended_after_id)
+
+        music_player.load_previous_song()
+        self.update_song_information(music_player.song)
+        self.play_song()
 

@@ -9,6 +9,9 @@ class LeftFrame(ctk.CTkFrame):
     def __init__(self, master, navigation_command, **kwargs):
         super().__init__(master, **kwargs)
 
+        self.parent = master
+        self.current_selected_button = None
+
         # -----------------------------------
         # Start init components
         # -----------------------------------
@@ -42,7 +45,7 @@ class LeftFrame(ctk.CTkFrame):
             image=self.home_image,
             anchor="w",
             corner_radius=0,
-            command=lambda: navigation_command("HomeFrame")
+            command=lambda: navigation_command("HomeFrame", self.home_button)
         )
         self.home_button.grid(row=1, column=0, columnspan=3, sticky="ew")
 
@@ -56,7 +59,7 @@ class LeftFrame(ctk.CTkFrame):
             image=self.library_image,
             anchor="w",
             corner_radius=0,
-            command=lambda: navigation_command("MusicLibraryFrame")
+            command=lambda: navigation_command("MusicLibraryFrame", self.library_button)
         )
         self.library_button.grid(row=2, column=0, columnspan=3, sticky="ew")
 
@@ -69,7 +72,7 @@ class LeftFrame(ctk.CTkFrame):
             image=self.playlist_image,
             anchor="w",
             corner_radius=0,
-            command=lambda: navigation_command("PlaylistFrame")
+            command=lambda: navigation_command("PlaylistFrame", self.playlist_button)
         )
         self.playlist_button.grid(row=4, column=0, columnspan=3, sticky="ew")
 
@@ -82,7 +85,7 @@ class LeftFrame(ctk.CTkFrame):
             image=self.setting_image,
             anchor="w",
             corner_radius=0,
-            command=lambda: navigation_command("SettingFrame")
+            command=lambda: navigation_command("SettingFrame", self.setting_button)
         )
         self.setting_button.grid(row=5, column=0, columnspan=3, sticky="ew")
         # -----------------------------------

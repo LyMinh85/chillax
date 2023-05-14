@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+import config
 from views.HomeFrame import HomeFrame
 from views.MusicLibraryFrame import MusicLibraryFrame
 from views.PlaylistFrame import PlaylistFrame
@@ -12,6 +13,7 @@ class RightFrame(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
+        self.parent = master
         self.list_page = (HomeFrame, MusicLibraryFrame, PlaylistFrame, SettingFrame)
         self.current_page = None
 
@@ -21,12 +23,11 @@ class RightFrame(ctk.CTkFrame):
             frame = page(self)
             self.frames[page_name] = frame
 
-        self.current_page = self.frames[HomeFrame.__name__]
-        self.show_frame(HomeFrame.__name__)
-
     def show_frame(self, page_name):
-        self.current_page.grid_forget()
+        if self.current_page is not None:
+            self.current_page.grid_forget()
         frame = self.frames[page_name]
-        self.current_page = frame
+        frame.configure(fg_color=config.right_frame_background_color)
         frame.grid(row=0, column=0, sticky="nsew")
+        self.current_page = frame
 

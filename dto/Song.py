@@ -8,6 +8,8 @@ class Song:
         self.file_path = file_path
         self.length = length
         self.artwork = None
+        self.album: str | None = None
+        self.artist: str | None = None
 
     def get_art_work(self):
         if isinstance(self.artwork, str):
