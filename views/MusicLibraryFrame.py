@@ -34,7 +34,7 @@ class MusicLibraryFrame(ctk.CTkScrollableFrame):
         self.title_row = SongFrame(self, index=-1, song=None, command=None)
 
         # Get default list song
-        music_library.get_list_song_from(config.get_dir_path() + "/songs/- (Deluxe)")
+        music_library.get_list_song_from(config.get_dir_path() + "/songs/ed sheeran")
         self.list_song = music_library.list_song
         self.render_list_song(
             list_song=self.list_song,
@@ -60,3 +60,12 @@ class MusicLibraryFrame(ctk.CTkScrollableFrame):
             song_frame.grid(row=index + 2, column=0, sticky="we")
 
             self.list_song_frame.append(song_frame)
+
+    def delete_song(self, index, song):
+        music_library.delete_song(song)
+        self.list_song = music_library.list_song
+        self.render_list_song(
+            list_song=self.list_song,
+            command=self.parent.parent.on_select_song  # access App class
+        )
+        music_player.set_list_song(self.list_song)

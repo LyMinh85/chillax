@@ -13,6 +13,9 @@ class MusicLibrary:
                 return
         self.list_song.append(song)
 
+    def delete_song(self, song):
+        self.list_song.remove(song)
+
     def get_song_from(self, file_path):
         file: FileType = File(file_path, easy=True)
         try:
