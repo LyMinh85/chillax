@@ -44,6 +44,11 @@
     ```shell
     python Chillax.py
     ```
+   
+4. Compile Chillax.py using Pyinstaller
+   ```shell
+   pyinstaller --clean Chillax.spec
+   ```
 ### Linux OS
 1. If python is not in your system
    ```shell
