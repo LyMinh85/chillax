@@ -3,7 +3,6 @@ import tkinter as tk
 import config
 from dto.Song import Song
 from PIL import Image
-from io import BytesIO
 
 
 class SongFrame(ctk.CTkFrame):
@@ -20,23 +19,23 @@ class SongFrame(ctk.CTkFrame):
         # Title row
         if index == -1:
             title_font = ctk.CTkFont(size=13, weight="bold")
-            self.image_label = ctk.CTkLabel(self, text="", anchor="w", width=60, font=title_font, bg_color=config.right_frame_background_color)
+            self.image_label = ctk.CTkLabel(self, text="", anchor="w", width=60, text_color=config.red_color, font=title_font, bg_color=config.right_frame_background_color)
             self.image_label.grid(row=0, column=0, sticky="wens")
-            self.name_label = ctk.CTkLabel(self, text="Title", anchor="w", width=400, font=title_font, bg_color=config.right_frame_background_color)
+            self.name_label = ctk.CTkLabel(self, text="Title", anchor="w", width=400, text_color=config.red_color, font=title_font, bg_color=config.right_frame_background_color)
             self.name_label.grid(row=0, column=1, sticky="wens")
-            self.artist_label = ctk.CTkLabel(self, text="Artist", anchor="w", width=200, font=title_font, bg_color=config.right_frame_background_color)
+            self.artist_label = ctk.CTkLabel(self, text="Artist", anchor="w", width=200, text_color=config.red_color, font=title_font, bg_color=config.right_frame_background_color)
             self.artist_label.grid(row=0, column=2, sticky="wens")
-            self.album_label = ctk.CTkLabel(self, text="Album", anchor="w", width=140, font=title_font, bg_color=config.right_frame_background_color)
+            self.album_label = ctk.CTkLabel(self, text="Album", anchor="w", width=140, text_color=config.red_color, font=title_font, bg_color=config.right_frame_background_color)
             self.album_label.grid(row=0, column=3, sticky="wens")
         else:
             self.song_image = ctk.CTkImage(dark_image=Image.open(song.get_art_work()), size=(40, 40))
             self.image_label = ctk.CTkLabel(self, image=self.song_image, text="", width=60, compound="left", bg_color=config.right_frame_background_color)
             self.image_label.grid(row=0, column=0, sticky="wens")
-            self.name_label = ctk.CTkLabel(self, text=song.title, anchor="w", width=400, bg_color=config.right_frame_background_color)
+            self.name_label = ctk.CTkLabel(self, text=config.reduce_text(song.title, 50), anchor="w", width=400, bg_color=config.right_frame_background_color)
             self.name_label.grid(row=0, column=1, sticky="wens")
-            self.artist_label = ctk.CTkLabel(self, text=song.artist, anchor="w", width=200, bg_color=config.right_frame_background_color)
+            self.artist_label = ctk.CTkLabel(self, text=config.reduce_text(song.artist, 20), anchor="w", width=200, bg_color=config.right_frame_background_color)
             self.artist_label.grid(row=0, column=2, sticky="wens")
-            self.album_label = ctk.CTkLabel(self, text=song.album, anchor="w", width=140, bg_color=config.right_frame_background_color)
+            self.album_label = ctk.CTkLabel(self, text=config.reduce_text(song.album, 10), anchor="w", width=140, bg_color=config.right_frame_background_color)
             self.album_label.grid(row=0, column=3, sticky="wens")
 
         self.menu = tk.Menu(
@@ -84,6 +83,6 @@ class SongFrame(ctk.CTkFrame):
         finally:
             self.menu.grab_release()
 
-
     def on_click_delete(self):
         self.parent.delete_song(self.index, self.song)
+

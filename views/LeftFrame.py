@@ -1,9 +1,6 @@
 from PIL import Image
 import customtkinter as ctk
 
-from views.HomeFrame import HomeFrame
-from views.MusicLibraryFrame import MusicLibraryFrame
-
 
 class LeftFrame(ctk.CTkFrame):
     def __init__(self, master, navigation_command, **kwargs):

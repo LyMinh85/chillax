@@ -37,7 +37,7 @@
     git clone https://github.com/LyMinh85/chillax.git
     cd chillax
     python -m venv env
-    source env/bin/activate
+    env/Scripts/activate.bat
     pip install -r requirements.txt
     ```
 3. Run Chillax App

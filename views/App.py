@@ -1,11 +1,8 @@
 import math
-from io import BytesIO
 from tkinter import filedialog
-
 import customtkinter as ctk
 import pygame
 from PIL import Image
-
 import config
 from controllers.MusicPlayer import music_player
 from controllers.MusicLibrary import music_library

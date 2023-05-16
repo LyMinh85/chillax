@@ -3,13 +3,12 @@ import time
 import customtkinter as ctk
 import pygame
 from PIL import Image
-
-import views.App
-from controllers.MusicPlayer import music_player
+from controllers.Home import home
+from controllers.MusicPlayer import music_player, RepeatState
 from views.MusicLibraryFrame import MusicLibraryFrame
 
 # Set MUSIC_END event for pygame
-MUSIC_END = pygame.USEREVENT+1
+MUSIC_END = pygame.USEREVENT + 1
 pygame.mixer.music.set_endevent(MUSIC_END)
 
 
@@ -62,6 +61,15 @@ class MusicPlayerFrame(ctk.CTkFrame):
         )
         self.music_control_buttons_frame.grid(row=0, column=0, pady=10)
 
+        self.shuffle_image = ctk.CTkImage(dark_image=Image.open("assets/images/shuffle-button.png"), size=(30, 30))
+        self.shuffle_button = ctk.CTkButton(
+            self.music_control_buttons_frame, text="", image=self.shuffle_image,
+            width=15, height=15, fg_color="transparent",
+            hover_color="gray30",
+            command=lambda: print("Not supported yet")
+        )
+        self.shuffle_button.grid(row=0, column=0)
+
         # Previous button
         self.previous_image = ctk.CTkImage(dark_image=Image.open("assets/images/previous-button.png"), size=(30, 30))
         self.previous_button = ctk.CTkButton(
@@ -70,7 +78,7 @@ class MusicPlayerFrame(ctk.CTkFrame):
             hover_color="gray30",
             command=self.btn_previous_song_on_click
         )
-        self.previous_button.grid(row=0, column=0)
+        self.previous_button.grid(row=0, column=1)
 
         # Play or pause button
         self.play_image = ctk.CTkImage(dark_image=Image.open("assets/images/play-button.png"), size=(30, 30))
@@ -80,7 +88,7 @@ class MusicPlayerFrame(ctk.CTkFrame):
             width=15, height=15, fg_color="transparent", command=self.play_song,
             hover_color="gray30"
         )
-        self.play_button.grid(row=0, column=1, padx=10)
+        self.play_button.grid(row=0, column=2, padx=10)
 
         # Next button
         self.next_image = ctk.CTkImage(dark_image=Image.open("assets/images/next-button.png"), size=(30, 30))
@@ -90,7 +98,20 @@ class MusicPlayerFrame(ctk.CTkFrame):
             hover_color="gray30",
             command=self.btn_next_song_on_click
         )
-        self.next_button.grid(row=0, column=2)
+        self.next_button.grid(row=0, column=3)
+
+        # Repeat button
+        self.repeat_off_image = ctk.CTkImage(dark_image=Image.open("assets/images/no-repeat-button.png"), size=(30, 30))
+        self.repeat_all_image = ctk.CTkImage(dark_image=Image.open("assets/images/repeat-button.png"), size=(30, 30))
+        self.repeat_one_song_image = ctk.CTkImage(dark_image=Image.open("assets/images/repeat-one-song-button.png"),
+                                                  size=(30, 30))
+        self.repeat_button = ctk.CTkButton(
+            self.music_control_buttons_frame, text="", image=self.repeat_off_image,
+            width=15, height=15, fg_color="transparent",
+            hover_color="gray30",
+            command=self.btn_repeat_song_on_click
+        )
+        self.repeat_button.grid(row=0, column=4)
 
         # music duration progress bar frame
         self.duration_frame = ctk.CTkFrame(self.music_control_frame, height=20)
@@ -176,6 +197,9 @@ class MusicPlayerFrame(ctk.CTkFrame):
                 self.play_button.configure(image=self.play_image)
         elif not music_player.is_playing:
             print("play music")
+            # Add current play song to list_recent_medis
+            home.add_song_to_list_recent_media(music_player.song)
+
             pygame.mixer.music.play()
             pygame.mixer.music.set_volume(music_player.volume)
             music_player.is_playing = True
@@ -215,11 +239,23 @@ class MusicPlayerFrame(ctk.CTkFrame):
                 self.duration_slider.set(math.ceil(music_player.song.length))
                 self.after_cancel(self.check_music_ended_after_id)
 
-                if music_player.has_next_song():
-                    print("Next song")
-                    music_player.load_next_song()
+                if music_player.repeat_state == RepeatState.REPEAT_ONE:
+                    print("Repeat")
+                    music_player.load_repeat_one_song()
                     self.update_song_information(music_player.song)
                     self.play_song()
+                else:
+                    if music_player.has_next_song():
+                        print("Next song")
+                        music_player.load_next_song()
+                        self.update_song_information(music_player.song)
+                        self.play_song()
+                    else:
+                        if music_player.repeat_state == RepeatState.REPEAT_ALL:
+                            print("Repeat all song")
+                            music_player.load_next_song()
+                            self.update_song_information(music_player.song)
+                            self.play_song()
 
         # Repeat this function every 0.1 second
         self.check_music_ended_after_id = self.after(100, self.check_music_ended)
@@ -228,7 +264,8 @@ class MusicPlayerFrame(ctk.CTkFrame):
         music_library_frame = self.parent.right_frame.frames[MusicLibraryFrame.__name__]
         if music_library_frame.current_choosing_frame is not None:
             music_library_frame.current_choosing_frame.set_selected(False)
-        music_library_frame.current_choosing_frame = music_library_frame.list_song_frame[music_player.current_song_index]
+        music_library_frame.current_choosing_frame = music_library_frame.list_song_frame[
+            music_player.current_song_index]
         music_library_frame.current_choosing_frame.set_selected(True)
 
         # Update song information in music player frame
@@ -283,3 +320,14 @@ class MusicPlayerFrame(ctk.CTkFrame):
         self.update_song_information(music_player.song)
         self.play_song()
 
+    def btn_repeat_song_on_click(self):
+        if music_player.repeat_state == RepeatState.REPEAT_OFF:
+            self.repeat_button.configure(image=self.repeat_one_song_image)
+            music_player.set_repeat_state(RepeatState.REPEAT_ONE)
+        elif music_player.repeat_state == RepeatState.REPEAT_ONE:
+            self.repeat_button.configure(image=self.repeat_all_image)
+            music_player.set_repeat_state(RepeatState.REPEAT_ALL)
+        else:
+            self.repeat_button.configure(image=self.repeat_off_image)
+            music_player.set_repeat_state(RepeatState.REPEAT_OFF)
+        print(music_player.repeat_state)

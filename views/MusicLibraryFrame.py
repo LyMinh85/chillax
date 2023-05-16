@@ -1,5 +1,4 @@
 import customtkinter as ctk
-
 import config
 from controllers.MusicPlayer import music_player
 from controllers.MusicLibrary import music_library

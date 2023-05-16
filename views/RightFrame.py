@@ -1,5 +1,4 @@
 import customtkinter as ctk
-
 import config
 from views.HomeFrame import HomeFrame
 from views.MusicLibraryFrame import MusicLibraryFrame
@@ -28,6 +27,12 @@ class RightFrame(ctk.CTkFrame):
             self.current_page.grid_forget()
         frame = self.frames[page_name]
         frame.configure(fg_color=config.right_frame_background_color)
+
+        # if choose Home page
+        if page_name == HomeFrame.__name__:
+            # Render recent listened songs
+            frame.on_render()
+
         frame.grid(row=0, column=0, sticky="nsew")
         self.current_page = frame
 

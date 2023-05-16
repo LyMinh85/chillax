@@ -1,8 +1,12 @@
 import pygame
-from mutagen import File, FileType
-from mutagen.id3 import ID3
-from dto.Song import Song
 from controllers.MusicLibrary import music_library
+from enum import Enum
+
+
+class RepeatState(Enum):
+    REPEAT_OFF = 1
+    REPEAT_ONE = 2
+    REPEAT_ALL = 3
 
 
 class MusicPlayer:
@@ -15,7 +19,9 @@ class MusicPlayer:
         self.is_pause = False
         self.is_load = False
         self.is_mute = False
+        self.repeat_state: RepeatState = RepeatState.REPEAT_OFF
         self.volume = 100
+        self.next_song = 0;
 
     def set_list_song(self, list_song):
         self.list_song = list_song
@@ -47,11 +53,21 @@ class MusicPlayer:
         pygame.mixer.music.load(self.song.file_path)
         self.is_load = True
 
+    def load_repeat_one_song(self):
+        self.next_song = self.current_song_index
+        self.song = self.list_song[self.next_song]
+        pygame.mixer.music.load(self.song.file_path)
+        self.is_load = True
+
+
     def has_next_song(self):
         return self.current_song_index + 1 < len(self.list_song)
 
     def has_previous_song(self):
         return self.current_song_index - 1 > -1
+
+    def set_repeat_state(self, repeat_state: RepeatState):
+        self.repeat_state = repeat_state
 
 
 music_player = MusicPlayer()
