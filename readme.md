@@ -49,6 +49,9 @@
    ```shell
    pyinstaller --clean Chillax.spec
    ```
+
+5. Then after that, copy folder 'assets' to folder 'dist'
+
 ### Linux OS
 1. If python is not in your system
    ```shell
@@ -81,6 +84,7 @@
    ```shell
    pyinstaller --clean Chillax.spec
    ```
+7. Then after that, copy folder 'assets' to folder 'dist'
 ### MacOS
 1. If python is not in your system
    - [Install python3.10 or higher version](https://www.python.org/downloads/macos/)
@@ -103,3 +107,4 @@
    ```shell
    pyinstaller --clean Chillax.spec
    ```
+5. Then after that, copy folder 'assets' to folder 'dist'

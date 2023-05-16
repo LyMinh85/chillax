@@ -82,14 +82,12 @@ class App(ctk.CTk):
         if folder_path == "":
             return
 
-        import glob
-        for filename in glob.glob(folder_path + "/*.mp3"):
-            file_path = filename
-            song = music_library.get_song_from(file_path)
-            music_library.add_song(song)
-
+        # Get all song in folder
+        music_library.get_list_song_from(folder_path)
+        # save to database
         music_library_model.add_one(folder_path)
 
+        # Render list song in MusicLibraryFrame
         self.right_frame.frames[MusicLibraryFrame.__name__].render_list_song(
             music_library.list_song,
             command=self.on_select_song
