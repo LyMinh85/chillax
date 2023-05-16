@@ -47,10 +47,12 @@ class MusicLibrary:
 
     def get_list_song_from(self, folder_path):
         import glob
-        for filename in glob.glob(folder_path + "/*.mp3"):
-            file_path = filename
-            song = self.get_song_from(file_path)
-            self.add_song(song)
+        supported_extensions = ['mp3', 'wav', 'ogg', 'flac']
+        for extension in supported_extensions:
+            for filename in glob.glob(folder_path + f"/*.{extension}"):
+                file_path = filename
+                song = self.get_song_from(file_path)
+                self.add_song(song)
 
 
 music_library = MusicLibrary()
