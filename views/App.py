@@ -10,6 +10,7 @@ from views.LeftFrame import LeftFrame
 from views.MusicLibraryFrame import MusicLibraryFrame
 from views.MusicPlayerFrame import MusicPlayerFrame
 from views.RightFrame import RightFrame
+from models.dbManager import music_library_model
 
 ctk.set_default_color_theme("assets/red.json")
 
@@ -86,6 +87,8 @@ class App(ctk.CTk):
             file_path = filename
             song = music_library.get_song_from(file_path)
             music_library.add_song(song)
+
+        music_library_model.add_one(folder_path)
 
         self.right_frame.frames[MusicLibraryFrame.__name__].render_list_song(
             music_library.list_song,

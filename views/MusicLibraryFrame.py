@@ -4,6 +4,7 @@ from controllers.MusicPlayer import music_player
 from controllers.MusicLibrary import music_library
 from views.SongFrame import SongFrame
 from PIL import Image
+from models.dbManager import music_library_model
 
 
 class MusicLibraryFrame(ctk.CTkScrollableFrame):
@@ -33,7 +34,10 @@ class MusicLibraryFrame(ctk.CTkScrollableFrame):
         self.title_row = SongFrame(self, index=-1, song=None, command=None)
 
         # Get default list song
-        music_library.get_list_song_from(config.get_dir_path() + "/songs/ed sheeran")
+        list_music_library_dto = music_library_model.get_all_music_library()
+        for music_library_dto in list_music_library_dto:
+            music_library.get_list_song_from(music_library_dto.folder_path)
+
         self.list_song = music_library.list_song
         self.render_list_song(
             list_song=self.list_song,
