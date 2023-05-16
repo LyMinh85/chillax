@@ -37,7 +37,7 @@
     git clone https://github.com/LyMinh85/chillax.git
     cd chillax
     python -m venv env
-    env/Scripts/activate.bat
+    env/Scripts/activate
     pip install -r requirements.txt
     ```
 3. Run Chillax App
@@ -77,7 +77,10 @@
     ```shell
     python3 Chillax.py
     ```
-   
+6. Compile Chillax.py using Pyinstaller
+   ```shell
+   pyinstaller --clean Chillax.spec
+   ```
 ### MacOS
 1. If python is not in your system
    - [Install python3.10 or higher version](https://www.python.org/downloads/macos/)
@@ -95,3 +98,8 @@
     ```shell
     python Chillax.py
     ```
+   
+4. Compile Chillax.py using Pyinstaller
+   ```shell
+   pyinstaller --clean Chillax.spec
+   ```
